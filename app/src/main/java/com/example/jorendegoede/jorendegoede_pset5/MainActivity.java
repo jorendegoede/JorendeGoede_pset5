@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Arraylists
     ArrayList<ToDo> todoList;
-    ArrayList<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,21 +58,21 @@ public class MainActivity extends AppCompatActivity {
         todoList = helper.read();
 
         // link to listview
-        adapter = new TodoAdapter(this, R.layout.row, todoList);
+        adapter = new TodoAdapter(getApplicationContext(), R.layout.row, todoList);
         taskListView.setAdapter(adapter);
-
-
-
     }
 
     private void updateList() {
-        // get fresh data from db
+        // get data from db
         todoList = helper.read();
 
-        // update listview
-        adapter = new TodoAdapter(getApplicationContext(), R.layout.row, todoList);
-        taskListView.setAdapter(adapter);
 
+        // update listview
+        runOnUiThread(new Runnable() {
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     // add item method
@@ -103,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
             helper.delete(todoList.get(position));
-
             updateList();
-            return true;
+            return false;
         }
     }
 
     // task completed when short click
     public class shortListener implements AdapterView.OnItemClickListener {
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -147,20 +146,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRestoreInstanceState (Bundle inState) {
         super.onRestoreInstanceState(inState);
-
-        //String textViewValueRestored = inState.getString("taskEditText");
-        //taskEditText.setText(textViewValueRestored);
-
-//        // set check state of todos
-//        for (int i = 0; i < todoList.size(); i++) {
-//
-//            if (ToDo.getChecked() == true) {
-//                textColor.setTextColor(0xff404d); //red
-//            }
-//            else {
-//                textColor.setTextColor(0xFF000000); //black
-//            }
-//        }
     }
-
 }

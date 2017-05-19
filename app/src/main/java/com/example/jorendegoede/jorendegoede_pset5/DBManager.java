@@ -38,7 +38,6 @@ public class DBManager {
     // create method, creates a new todo
     public void create(ToDo todo) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        onUpgrade(db, 1, 1);
         ContentValues values = new ContentValues();
         values.put(dbHelper.DATABASE_TASK, todo.getTodo());
         values.put(dbHelper.DATABASE_CHECK, todo.getChecked());
@@ -68,6 +67,7 @@ public class DBManager {
 
                 // create a todo-object with the newly retrieved data
                 ToDo todo = new ToDo(todoName, checkStatus, id);
+                Log.d("todostatus after", Boolean.toString(todo.getChecked()));
                 todos.add(todo);
             }
             while(cursor.moveToNext());
